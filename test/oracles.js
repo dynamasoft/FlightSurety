@@ -107,18 +107,6 @@ contract("Oracles", async (accounts) => {
           } catch (e) {}
         }
       }
-    });
-
-    it("(oracles) - set flight status correctly", async () => 
-    {
-      let result = await config.flightSuretyData.getFlightStatusCode(
-        flight2.airline,
-        flight2.flight,
-        flight2.timestamp,
-        { from: config.owner }
-      );
-      //console.log("Result: " + result);
-      assert.equal(result, STATUS_CODE_LATE_AIRLINE, "Flight is late");
-    });
+    });  
   });
 });
