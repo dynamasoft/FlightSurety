@@ -1,4 +1,3 @@
-// Functioning Oracle: Oracle functionality is implemented in the server app.
 import FlightSuretyApp from '../../build/contracts/FlightSuretyApp.json';
 import FlightSuretyData from '../../build/contracts/FlightSuretyData.json';
 import Config from './config.json';
@@ -8,147 +7,118 @@ import express from 'express';
 // Configuration
 debugger;
 let config = Config['localhost'];
-
 let web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
 web3.eth.defaultAccount = web3.eth.accounts[0];
 let flightSuretyApp = new web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
 let flightSuretyData = new web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
-const ORACLES_MAX_ACCOUNT = 25;
-const ORACLES_ACCOUNT_START = 10; // Accounts 0 to 8 are reserved for owner, airlines and passengers
-let oracles = [];
-
 
 
 // Status codes
-const STATUS_UNKNOWN = 0;
-const STATUS_ON_TIME = 10;
-const STATUS_LATE_AIRLINE = 20;
-const STATUS_LATE_WEATHER = 30;
-const STATUS_LATE_TECHNICAL = 40;
-const STATUS_LATE_OTHER = 50;
-
+const STATUS_CODE_UNKNOWN = 0;
+const STATUS_CODE_ON_TIME = 10;
+const STATUS_CODE_LATE_AIRLINE = 20;
+const STATUS_CODE_LATE_WEATHER = 30;
+const STATUS_CODE_LATE_TECHNICAL = 40;
+const STATUS_CODE_LATE_OTHER = 50;
 const STATUS_CODES  = [
-  STATUS_UNKNOWN,
-  STATUS_ON_TIME,
-  STATUS_LATE_AIRLINE,
-  STATUS_LATE_WEATHER,
-  STATUS_LATE_TECHNICAL,
-  STATUS_LATE_OTHER
+  STATUS_CODE_UNKNOWN,
+  STATUS_CODE_ON_TIME,
+  STATUS_CODE_LATE_AIRLINE,
+  STATUS_CODE_LATE_WEATHER,
+  STATUS_CODE_LATE_TECHNICAL,
+  STATUS_CODE_LATE_OTHER
 ];
 
+const ORACLES_MAX = 30;
+const OFFSET = 5;
+let oracles = [];
+let accounts = []
 
 // Get random status code
-function randomizeStatusCode() 
-{  
-  var i = Math.floor(Math.random() * STATUS_CODES.length);     
-  return STATUS_CODES[i];
+function randomize() {
+  return STATUS_CODES[Math.floor(Math.random() * STATUS_CODES.length)];
 }
 
-function isAuthorized(owner)
+function authorizeContract()
 {
-  debugger;
-
-  // Authorize FlightSurety app to call FlightSurety data contract
-  flightSuretyData.methods.authorizeContract(config.appAddress).send({from: owner}, (error, result) => {
-    
+  let owner = accounts[0];  
+  flightSuretyData.methods.authorizeContract(config.appAddress).send({from: owner}, (error, result) => 
+  {
     if(error) 
     {
       console.log(error);
     } 
-    else 
+    else
     {
-      console.log(`found authorized contract: ${config.appAddress}`);      
+      console.log(`Configured authorized caller: ${config.appAddress}`);
     }
+
   });
 }
 
-
-// Setup application
-web3.eth.getAccounts((error, accounts) => 
-{  
-  debugger;
-
-  let owner = accounts[0];
-
-  isAuthorized(owner);
-
-  debugger;
-
-  //console.log("authorized");
-  //console.log(accounts);
-  
-  for(var i=ORACLES_ACCOUNT_START; i<ORACLES_MAX_ACCOUNT + ORACLES_ACCOUNT_START; i++) 
-  {   
-      //  console.log("accounts :" + accounts[i]);
-      //console.log("before before accounts-->: + i:" + i + " "  + accounts[i]);
-
-     var result = flightSuretyApp.methods.registerOracle().send({from: accounts[i], value: web3.utils.toWei("1",'ether'), gas: 1000000}, (error, result) => 
-     {            
+function registerOracle()
+{
+  for(let a=OFFSET; a<ORACLES_MAX + OFFSET; a++) 
+  {    
+    flightSuretyApp.methods.registerOracle().send({from: accounts[a], value: web3.utils.toWei("1",'ether'), gas: 4500000}, (error, result) =>
+    {
       if(error) 
       {
         debugger;
         console.log(error);
-      }     
+      } 
     });
   }
+}
 
-    for(var i=ORACLES_ACCOUNT_START; i<ORACLES_MAX_ACCOUNT + ORACLES_ACCOUNT_START; i++) 
-    {  
-      
-        flightSuretyApp.methods.getMyIndexes().call({from: accounts[i], gas: 100000 }, (error, result) => 
+function getOracleIndexes()
+{
+  for(let a=OFFSET; a<ORACLES_MAX + OFFSET; a++) 
+  {   
+        flightSuretyApp.methods.getMyIndexes().call({from: accounts[a]}, (error, result) => 
         {
           if (error) {
             debugger;
-            console.log(error);
           }
-          else {           
-            var oracle = {address: accounts[i], index: result};
+          else {
+            let oracle = {address: accounts[a], index: result};
+            console.log(`Oracle: ${JSON.stringify(oracle)}`);
             oracles.push(oracle);
           }
         });
-      }     
-  });
-
-
-flightSuretyApp.events.OracleRequest({fromBlock: 0}, function (error, event) {
-  debugger;
-  console.log("Oracle services was requested");
-  if (error) {
-    console.log(error);
   }
-  else {
+}
 
-    let flightInfo = event.returnValues.flightInfo;
-    let timestamp = event.returnValues.timestamp;
-    let statusCode = randomizeStatusCode();    
+web3.eth.getAccounts((error, acct) => {
+
+  debugger;
+  accounts = acct;
+  authorizeContract();
+  registerOracle();
+  getOracleIndexes();
+
+});
+
+
+debugger;
+flightSuretyApp.events.OracleRequest({fromBlock: 0}, function (error, event) 
+{  
     let index = event.returnValues.index;
-    let airline = event.returnValues.airline;    
+    let airline = event.returnValues.airline;
+    let flight = event.returnValues.flight;
+    let timestamp = event.returnValues.timestamp;
+    let statusCode = randomize();
 
     for(let a=0; a<oracles.length; a++) 
     {
-      console.log(index);
-      console.log(oracles[a].index);
-
       if(oracles[a].index.includes(index)) 
       {
-        console.log("found include");
-        
-        flightSuretyApp.methods.submitOracleResponse(index, airline, flightInfo, timestamp, statusCode).send({from: oracles[a].address, gas: 100000}, (error, result) => {
-        
-          console.log("Oracle response has been submitted");
-
-          if(error) 
-          {
-            console.log(error);
-          } 
-          else 
-          {
-            console.log(`${JSON.stringify(oracles[a])}: Status code ${statusCode}`);
-          }
+        flightSuretyApp.methods.submitOracleResponse(index, airline, flight, timestamp, statusCode).send({from: oracles[a].address}, (error, result) => 
+        {         
+            console.log(`${JSON.stringify(oracles[a])}: Oracle Status code ${statusCode}`);         
         });
       }
-    }
-  }
+    }  
 });
 
 const app = express();
