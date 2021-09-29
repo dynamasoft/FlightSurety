@@ -535,12 +535,6 @@ interface FlightSuretyData {
         bytes32 key
     ) external view returns (bool);
 
-    function getFlightStatusCode(
-        address airline,
-        string flight,
-        uint256 timestamp
-    ) external view returns (uint8);
-
     // Passengers
     function purchase(
         bytes32 key,

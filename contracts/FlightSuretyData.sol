@@ -204,10 +204,6 @@ modifier isDupCall()
   }
 
 
-  function getFlightStatusCode(address airline, string flight, uint256 timestamp) external view returns(uint8) {
-    return flights[getFlightKey(airline, flight, timestamp)].statusCode;
-  }
-
   function getRegisteredAirlines() external view returns(address[] memory) {
     return registeredAirlines;
   }
@@ -384,11 +380,7 @@ modifier isDupCall()
     address(uint160(passenger)).transfer(amount);
     emit AccountWithdrawn(passenger, amount);
   }
-
-  function getFlightKey(address airline, string memory flight, uint256 timestamp) pure internal returns(bytes32) {
-    return keccak256(abi.encodePacked(airline, flight, timestamp));
-  }
-  
+    
   function fund() public payable requireIsOperational {
   }
 
