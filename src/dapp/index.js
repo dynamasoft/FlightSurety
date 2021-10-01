@@ -1,6 +1,7 @@
 import DOM from "./dom";
 import Contract from "./contract";
 import "./flightsurety.css";
+import { json } from "express";
 
 (async () => {
   let result = null;
@@ -36,9 +37,12 @@ import "./flightsurety.css";
     });
 
     DOM.elid("payBtn").addEventListener("click", () => {
-      contract.payAirline(firstAirlineAddress, (response) => {
-        displayMessage("pay airline is successful " + response);
+      
+      contract.payAirline(firstAirlineAddress, (response) => 
+      {        
+        displayMessage("fund an airline is successful " + response);
       });
+
     });
 
     DOM.elid("registerAirlineBtn1").addEventListener("click", () => {

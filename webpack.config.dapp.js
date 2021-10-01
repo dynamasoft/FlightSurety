@@ -43,5 +43,10 @@ module.exports = {
     contentBase: path.join(__dirname, "dapp"),
     port: 8000,
     stats: "minimal"
-  }
+  },
+  // node: {
+  //   //fs: 'empty',
+  //   //net: 'empty'
+  // }
+  
 };

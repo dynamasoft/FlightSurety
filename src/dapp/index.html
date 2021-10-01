@@ -1,111 +1,117 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>FlightSurety</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
 
-<body>
-
+  <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">FlightSurety</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
-            aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+      <a class="navbar-brand" href="#">FlightSurety</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarsExampleDefault"
+        aria-controls="navbarsExampleDefault"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </nav>
 
     <main class="container">
-        <h2>Airline Registration</h2>       
-        
-        <div>
-            First Register airline : 
-            <span id="firstRegisteredAirlineAddress"></span>        
+      <div class="row">
+        <div class="col-8">
+          <h2>Airline Registration</h2>
+
+          <div>
+            First Register airline :
+            <span id="firstRegisteredAirlineAddress"></span>
             <button id="payBtn">Pay to participate</button>
-        </div>         
-        <br/>   
-        <br/>           
-        <div>
-            <input id="airlineName1" value="airline2"/> 
-            <input id="airlineAddress1" value="0x85D0ff3e100a7069B301a4fBCD02ff21Af0462Bd" style="width:400px;" />
+          </div>
+          <br />
+          <br />
+          <div>
+            <input id="airlineName1" value="airline2" style="width: 150px" />
+            <input
+              id="airlineAddress1"
+              value="0x85D0ff3e100a7069B301a4fBCD02ff21Af0462Bd"
+              style="width: 400px"
+            />
             <button id="registerAirlineBtn1" data-index="1">Register</button>
-        </div>
-        <div>
-            <input id="airlineName2" value="airline3"/> 
-            <input id="airlineAddress2" value="0x6fE573Daa310F01a804230c9794021423c3e1987"  style="width:400px;" />
+          </div>
+          <div>
+            <input id="airlineName2" value="airline3" style="width: 150px" />
+            <input
+              id="airlineAddress2"
+              value="0x6fE573Daa310F01a804230c9794021423c3e1987"
+              style="width: 400px"
+            />
             <button id="registerAirlineBtn2">Register</button>
-        </div>
-        <div>
-            <input id="airlineName3" value="airline4"/> 
-            <input id="airlineAddress3" value="0xc9D313912691d00cD11ad6f0d898A4FDeF98A246"  style="width:400px;" />
+          </div>
+          <div>
+            <input id="airlineName3" value="airline4" style="width: 150px" />
+            <input
+              id="airlineAddress3"
+              value="0xc9D313912691d00cD11ad6f0d898A4FDeF98A246"
+              style="width: 400px"
+            />
             <button id="registerAirlineBtn3">Register</button>
+          </div>
+          <div>
+            <input id="airlineName4" value="airline5" style="width: 150px" />
+            <input
+              id="airlineAddress4"
+              value="0x100f8a8CD7c0de7517C6eE5664Acbaac25bf4E8F"
+              style="width: 400px"
+            />
+            <button id="registerAirlineBtn4">
+              Register (multi-sig consensus)
+            </button>
+          </div>
+          <br />
+          <h2>Register Flight</h2>
+          <button id="registerFlightBtn">Register Flight</button>
+          <br />
+          <h2>Purchase Insurance</h2>
+          <button id="purchaseInsurancBtn">Purchase Insurance</button>
+
+          <br />
+          <h2>Get Pending Payment Amount</h2>
+          <button id="pendingPaymentAmountBtn">Get Amount to be Refund</button>
+
+          <br />
+          <h2>Passenger Balance</h2>
+          <button id="getPassengerBalanceBtn">Get Passenger Balance</button>
+          <br />
+          <h2>Purchase Insurance</h2>
+          <button id="withdrawPaymentBtn">Get Refund</button>
+
+          <div id="display-wrapper" class="top-20"></div>
+          <div class="row top-20">
+            <label class="form">Flight</label>
+            <input type="text" id="flight-number" />
+            <btn class="btn btn-primary" id="submit-oracle"
+              >Submit to Oracles</btn
+            >
+          </div>
         </div>
-        <div>
-            <input id="airlineName4" value="airline5"/> 
-            <input id="airlineAddress4" value="0x100f8a8CD7c0de7517C6eE5664Acbaac25bf4E8F"  style="width:400px;" />
-            <button id="registerAirlineBtn4">Register (multi-sig consensus)</button>
-        </div>       
-       
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <h2>Register Flight</h2>       
-        <button id="registerFlightBtn">Register Flight</button>
-
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <h2>Purchase Insurance</h2>       
-        <button id="purchaseInsurancBtn">Purchase Insurance</button>
-
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <h2>Get Pending Payment Amount</h2>       
-        <button id="pendingPaymentAmountBtn">Get Amount to be Refund</button>
-
-
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <h2>Passenger Balance</h2>       
-        <button id="getPassengerBalanceBtn">Get Passenger Balance</button>
-
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <h2>Purchase Insurance</h2>       
-        <button id="withdrawPaymentBtn">Get Refund</button>
-        
-        
-
-
-
-        <div id="display-wrapper" class="top-20">
+        <div class="col-4">
+            <h2>LOGS</h2>
+          <div id="msg"></div>
         </div>
-        <div class="row top-20">
-            <label class="form">Flight</label> <input type="text" id="flight-number"> 
-            <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
-        </div>
-
-
-
-        <div id="msg"></div>
-
-
-
-
+      </div>
     </main>
-
-</body>
-
+  </body>
 </html>

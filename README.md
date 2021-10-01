@@ -50,3 +50,28 @@ Deploy the contents of the ./dapp folder
 * [Solidity Language Reference](http://solidity.readthedocs.io/en/v0.4.24/)
 * [Ethereum Blockchain Explorer](https://etherscan.io/)
 * [Web3Js Reference](https://github.com/ethereum/wiki/wiki/JavaScript-API)
+
+**************************************** PROJECT CRITERIA ************************************************
+
+1. Smart Contract Seperation
+  1) FlightSuretyData.sol for data persistence
+  2) FlightSuretyApp.sol for app logic and oracles code 
+  ** DONE **
+
+2. Dapp Created and Used for Contract Calls
+A Dapp client has been created and is used for triggering contract calls. Client can be launched with “npm run dapp” and is available at http://localhost:8000
+
+Specific contract calls:
+
+1) Passenger can purchase insurance for flight
+2) Trigger contract to request flight status update
+
+** Please run 
+
+
+
+
+
+
+
+
